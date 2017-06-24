@@ -38,7 +38,12 @@ in a day, for every day. To create the view, enter the following into the
 terminal:
  * create view all_requests as select date_part('day', log.time), count(*) as num_requests from log group by 
 date_part('month', log.time), date_part('day', log.time) order by 
-date_part('day', log.time); 
+date_part('day', log.time);
+3. The third created view's purpose is to count the number of views for each article in the database. 
+To create the view, enter the following into the database:
+ * create view articleSum as select articles.title, count(*) as artViews from articles, log 
+where articles.slug = aubatring(log.path, 10) 
+group by articles.title order by artViews desc; 
 
 ## Tests
 
