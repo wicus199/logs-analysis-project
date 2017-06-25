@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 import psycopg2
+import time
+
 
 DBNAME = "news"
 
@@ -25,10 +27,10 @@ c.execute("select authors.name, sum(articleSum.artViews) as authViews "
 authors = c.fetchall()
 
 # Execute the query for the third question
-c.execute("select all_requests.date_part,(error_requests.num_errors*100)::numeric/all_requests.num_requests as percent_error "
-          "from error_requests, all_requests where error_requests.date_part = all_requests.date_part "
+c.execute("select all_requests.time,(error_requests.num_errors*100)::numeric/all_requests.num_requests as percent_error "
+          "from error_requests, all_requests where error_requests.time = all_requests.time "
           "and (error_requests.num_errors*100)::numeric/all_requests.num_requests > 1 "
-          "order by all_requests.date_part")
+          "order by all_requests.time")
 
 # Fetch the result for the third query and store in errors
 errors = c.fetchall()
@@ -46,7 +48,7 @@ print("\n2. Who are the most popular article authors of all time?\n")
 for row in authors:
     print('\t"{}" - {} views'.format(row[0], row[1]))
 
-print("\n3. On what days did more than 1% of requests lead to errors?\n")
+print("\n3. On which days did more than 1% of requests lead to errors?\n")
 # for statement to print the days on which more than 1% of requests resulted in an error
 for row in errors:
-    print("\t{} July - {:.2f}% errors".format(int(row[0]),row[1]))
+    print("\t{} {} {} - {:.2f}% errors".format(row[0].strftime("%d"),row[0].strftime("%B"), row[0].strftime("%Y"), row[1]))
