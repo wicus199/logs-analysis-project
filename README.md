@@ -30,20 +30,23 @@ python code.
 
 Software packages used were installed using the terminal in Linux. 
 Python's IDLE IDE was used to develop the python code and Vim text editor was 
-used for any other text files.
+used for any other text files. Enter the following commands in terminal to 
+install the relevant packages:
 
 * sudo apt-get install python3
 * sudo apt-get install idle3
 * sudo apt-get install python3-pip
 * sudo apt-get install psycopg2
 
-* To create the news database, follow the instructions given 
-[here](https://www.a2hosting.com/kb/developer-corner/postgresql/managing-postgresql-databases-and-users-from-the-command-line)
-* After the news database is created, execute the following command in the 
+To create the news database, follow the instructions given 
+[here.](https://www.a2hosting.com/kb/developer-corner/postgresql/managing-postgresql-databases-and-users-from-the-command-line)
+
+After the news database is created, execute the following command in the 
 terminal to populate the news database with data:
-..* psql -d news -f newsdata.sql
-* Connect to the news database using:
-..* psql -d news
+* psql -d news -f newsdata.sql
+
+Connect to the news database using:
+* psql -d news
 
 After the database is created and the user is connected, enter the *create view* 
 sql commands described in the **View Creation** section.
@@ -59,20 +62,20 @@ For the python script to execute without any errors, the user first needs to cre
 1. The first created view's purpose is to count the number of views for each 
 article in the database.
 To create the view, enter the following into the database:
-..* create view articleSum as select articles.title, count(*) as artViews 
+  * create view articleSum as select articles.title, count(*) as artViews 
 from articles, log where articles.slug = substring(log.path, 10) 
 group by articles.title order by artViews desc; 
 2. The second created view's purpose is to calculate the number of HTTP requests 
 that resulted in an error. To create the view, enter the following into the 
 database:
-..* create view error_requests as select log.time::timestamp::date, count(*) as num_errors 
+  * create view error_requests as select log.time::timestamp::date, count(*) as num_errors 
 from log where log.status != '200 OK' 
 group by log.time::timestamp::date 
 order by log.time::timestamp::date;
 3. The third created view's purpose is to count all the requests that happened 
 in a day, for every day. To create the view, enter the following into the 
 terminal:
-..* create view all_requests as select log.time::timestamp::date, count(*) as num_requests 
+  * create view all_requests as select log.time::timestamp::date, count(*) as num_requests 
 from log group by log.time::timestamp::date order by log.time::timestamp::date;
 
 ## Tests
