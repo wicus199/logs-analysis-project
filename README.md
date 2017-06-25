@@ -27,23 +27,25 @@ that.
 ## View creation
 
 For the python script to execute without any errors, the user first needs to create views that are used in some of the queries. Creating views makes the code look cleaner and easier to understand. The following views were created:
-1. The first created view's purpose is to calculate the number of HTTP requests 
+
+1. The first created view's purpose is to count the number of views for each 
+article in the database.
+To create the view, enter the following into the database:
+  * create view articleSum as select articles.title, count(*) as artViews 
+from articles, log where articles.slug = substring(log.path, 10) 
+group by articles.title order by artViews desc; 
+2. The second created view's purpose is to calculate the number of HTTP requests 
 that resulted in an error. To create the view, enter the following into the 
 database:
- * create view error_requests as select date_part('day', log.time) count(*) as 
-num_errors from log where log.status != '200 OK' group by date_part('day', 
-log.time) order by date_part('day', log.time);
-2. The second created view's purpose is to count all the requests that happened 
+  * create view error_requests as select log.time::timestamp::date, count(*) as num_errors 
+from log where log.status != '200 OK' 
+group by log.time::timestamp::date 
+order by log.time::timestamp::date;
+3. The third created view's purpose is to count all the requests that happened 
 in a day, for every day. To create the view, enter the following into the 
 terminal:
- * create view all_requests as select date_part('day', log.time), count(*) as num_requests from log group by 
-date_part('month', log.time), date_part('day', log.time) order by 
-date_part('day', log.time);
-3. The third created view's purpose is to count the number of views for each article in the database. 
-To create the view, enter the following into the database:
- * create view articleSum as select articles.title, count(*) as artViews from articles, log 
-where articles.slug = aubatring(log.path, 10) 
-group by articles.title order by artViews desc; 
+  * create view all_requests as select log.time::timestamp::date, count(*) as num_requests 
+from log group by log.time::timestamp::date order by log.time::timestamp::date;
 
 ## Tests
 
