@@ -21,6 +21,26 @@ Building informative summaries from logs is a real task that is often used in
 engineering and business. This project provides practical experience in doing 
 that. 
 
+## Program Description
+
+The program uses one query for each question. The queries used in the second and 
+third questions use views that were created in the database before running the 
+python script. 
+
+* The first query does not use a join or view and is a normal straightforward 
+query. It uses count(*) to all the articles views and matching the slug of the 
+article in the articles table to part of the path string in the log table. The 
+count is grouped by article name to find the total views for each article. 
+* The second query uses a created view to find the total views per author by 
+summing the views column in the created view. The authors ID in the authors 
+column is compared to the author number in the articles column to find the rows 
+to sum. 
+* The third query uses two created views, one to sum the total requests for eah 
+day and the other to sum the total error requests for each day. The number of 
+errors and number of total requests is then used to calculate a percentage value 
+for each day. The time columns in both view tables are compared to match the 
+days for the errors and total requests.   
+
 ## Installation
 
 The project was completed using a Linux Mint VM installed in Oracle VM
